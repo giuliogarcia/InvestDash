@@ -377,6 +377,81 @@ export default function Home() {
           {/* Mostrar componentes públicos */}
           <MarketIndices />
 
+          {/* Top Movers Section */}
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-6">Ativos em Destaque</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Top Gainers */}
+              <Card className="p-6 border-0 bg-gradient-to-br from-green-50/50 to-emerald-50/50 dark:from-green-950/20 dark:to-emerald-950/20">
+                <div className="flex items-center gap-2 mb-4">
+                  <TrendingUp className="w-5 h-5 text-green-600" />
+                  <h3 className="text-lg font-bold text-foreground">Maiores Altas</h3>
+                </div>
+                <div className="space-y-3">
+                  {[
+                    { ticker: "VVAR3", price: "R$ 15,42", change: "+8,5%" },
+                    { ticker: "AZUL4", price: "R$ 8,65", change: "+6,2%" },
+                    { ticker: "RAIL3", price: "R$ 18,20", change: "+5,8%" },
+                  ].map((item) => (
+                    <div key={item.ticker} className="flex justify-between items-center pb-3 border-b border-border/20 last:border-0">
+                      <div>
+                        <p className="font-semibold text-foreground">{item.ticker}</p>
+                        <p className="text-xs text-muted-foreground">{item.price}</p>
+                      </div>
+                      <span className="text-green-600 font-semibold">{item.change}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+
+              {/* Top Losers */}
+              <Card className="p-6 border-0 bg-gradient-to-br from-red-50/50 to-rose-50/50 dark:from-red-950/20 dark:to-rose-950/20">
+                <div className="flex items-center gap-2 mb-4">
+                  <TrendingDown className="w-5 h-5 text-red-600" />
+                  <h3 className="text-lg font-bold text-foreground">Maiores Quedas</h3>
+                </div>
+                <div className="space-y-3">
+                  {[
+                    { ticker: "VALE3", price: "R$ 62,10", change: "-4,2%" },
+                    { ticker: "BBAS3", price: "R$ 28,50", change: "-3,8%" },
+                    { ticker: "PETR4", price: "R$ 31,25", change: "-2,9%" },
+                  ].map((item) => (
+                    <div key={item.ticker} className="flex justify-between items-center pb-3 border-b border-border/20 last:border-0">
+                      <div>
+                        <p className="font-semibold text-foreground">{item.ticker}</p>
+                        <p className="text-xs text-muted-foreground">{item.price}</p>
+                      </div>
+                      <span className="text-red-600 font-semibold">{item.change}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* Ticker Search Section */}
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-6">Análise de Ativos</h2>
+            <Card className="p-8 border-0 bg-gradient-to-r from-primary/5 to-secondary/5">
+              <p className="text-muted-foreground mb-4">Busque por qualquer ativo da bolsa brasileira para visualizar:</p>
+              <ul className="space-y-2 text-sm text-muted-foreground mb-6 list-disc list-inside">
+                <li>Indicadores fundamentalistas (P/L, P/VP, ROE, Margem, etc)</li>
+                <li>Histórico completo de preços</li>
+                <li>Análise de dividendos</li>
+                <li>Fórmulas de valuation (Graham, Bazin)</li>
+                <li>Comparação com outros ativos</li>
+              </ul>
+              <Button
+                onClick={() => {
+                  window.location.href = `/busca-avancada`;
+                }}
+                variant="secondary"
+              >
+                Explorar Ativos →
+              </Button>
+            </Card>
+          </div>
+
           {/* CTA Final */}
           <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-12 text-center border border-primary/20">
             <h2 className="text-3xl font-bold text-foreground mb-4">Comece a Investir com Inteligência</h2>

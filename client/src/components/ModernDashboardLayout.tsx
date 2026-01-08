@@ -130,7 +130,7 @@ export default function ModernDashboardLayout({
                 size="sm"
                 className="hidden sm:inline-flex"
               >
-                Entrar
+                Entrar / Criar Conta
               </Button>
             ) : null}
 

@@ -76,7 +76,7 @@ export default function LandingPage() {
             }}
             size="sm"
           >
-            Entrar
+            Entrar / Criar Conta
           </Button>
         </div>
       </nav>
