@@ -251,6 +251,29 @@ export default function Home() {
     });
   }, [isAuthenticated, user, loading, location]);
 
+  // Aggressive auth polling after OAuth redirect
+  useEffect(() => {
+    const hasLoggedIn = location.includes("?loggedin=");
+    if (!hasLoggedIn) return;
+
+    console.log("[HomeEnhanced] OAuth callback detected, starting aggressive polling");
+    console.log("[HomeEnhanced] Current auth state:", { isAuthenticated, user, loading });
+    
+    // Immediate refetch
+    refresh();
+    
+    // Cascade refetches with exponential backoff
+    const timings = [50, 100, 200, 400, 800, 1200, 2000, 3000, 5000];
+    const timeouts = timings.map((ms) =>
+      setTimeout(() => {
+        console.log(`[HomeEnhanced] Refetch at ${ms}ms, state:`, { isAuthenticated, user });
+        refresh();
+      }, ms)
+    );
+
+    return () => timeouts.forEach(clearTimeout);
+  }, [location, refresh, isAuthenticated, user]);
+
   // Refetch auth status quando a página monta
   useEffect(() => {
     const handleFocus = () => {

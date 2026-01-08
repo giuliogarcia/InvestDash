@@ -14,9 +14,9 @@ export function useAuth(options?: UseAuthOptions) {
   const utils = trpc.useUtils();
 
   const meQuery = trpc.auth.me.useQuery(undefined, {
-    retry: 3, // Retry 3 vezes se falhar
+    retry: 5, // Retry até 5 vezes
     refetchOnWindowFocus: true,
-    refetchInterval: 1000, // Refetch a cada 1 segundo (mais agressivo)
+    refetchInterval: 500, // Refetch a cada 500ms (MUITO agressivo)
     staleTime: 0, // Sempre considerar os dados como desatualizados
     gcTime: 0, // Não armazenar dados em cache
   });
