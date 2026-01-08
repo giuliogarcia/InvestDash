@@ -1,0 +1,6 @@
+{
+  "buildDir": "dist",
+  "publicDir": "dist/public",
+  "startCommand": "NODE_ENV=production node dist/index.js",
+  "buildCommand": "pnpm build"
+}

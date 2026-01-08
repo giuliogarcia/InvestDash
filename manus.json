@@ -1,0 +1,13 @@
+{
+  "name": "InvestDash",
+  "description": "Análise Profissional de Investimentos em Ações Brasileiras",
+  "version": "1.0.0",
+  "buildCommand": "pnpm build",
+  "startCommand": "NODE_ENV=production node dist/index.js",
+  "publicDir": "dist/public",
+  "port": 3000,
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3000"
+  }
+}

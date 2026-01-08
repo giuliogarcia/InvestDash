@@ -1,0 +1,395 @@
+import { useAuth } from "@/_core/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Loader2, TrendingUp, TrendingDown, PlusCircle, BarChart3, Shield } from "lucide-react";
+import { getLoginUrl } from "@/const";
+import { trpc } from "@/lib/trpc";
+import ModernDashboardLayout from "@/components/ModernDashboardLayout";
+import MarketIndices from "@/components/MarketIndices";
+import AssetDistribution from "@/components/AssetDistribution";
+import PortfolioEvolution from "@/components/PortfolioEvolution";
+import UpcomingDividends from "@/components/UpcomingDividends";
+import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
+
+function PortfolioSummary() {
+  const { data: summary, isLoading } = trpc.portfolio.getSummary.useQuery();
+  const { data: holdings } = trpc.portfolio.getHoldings.useQuery();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="animate-spin w-8 h-8 text-primary" />
+      </div>
+    );
+  }
+
+  if (!summary) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground mb-4">Nenhum ativo na carteira</p>
+        <Button className="bg-primary text-primary-foreground hover:bg-accent">
+          <PlusCircle className="w-4 h-4 mr-2" />
+          Adicionar Ativo
+        </Button>
+      </div>
+    );
+  }
+
+  const gainPercentage = Number(summary.gainPercentage);
+  const isPositive = gainPercentage >= 0;
+
+  // Mock data for new components
+  const distributionData = [
+    { name: 'Ações', value: 45000, percentage: 45 },
+    { name: 'FIIs', value: 30000, percentage: 30 },
+    { name: 'Renda Fixa', value: 15000, percentage: 15 },
+    { name: 'ETFs', value: 10000, percentage: 10 },
+  ];
+
+  const evolutionData = Array.from({ length: 30 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (29 - i));
+    return {
+      date: date.toISOString(),
+      value: 95000 + Math.random() * 10000,
+      invested: 90000 + (i * 200),
+    };
+  });
+
+  const upcomingDividends = [
+    {
+      id: 1,
+      ticker: 'ITUB4',
+      assetName: 'Itaú Unibanco',
+      type: 'jcp',
+      amount: 125.50,
+      perShare: 0.0251,
+      exDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+      paymentDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 2,
+      ticker: 'HGLG11',
+      assetName: 'CSHG Logística',
+      type: 'rendimento',
+      amount: 89.30,
+      perShare: 0.8930,
+      exDate: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString(),
+      paymentDate: new Date(Date.now() + 18 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Main Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="p-6">
+          <p className="text-sm text-muted-foreground font-medium mb-2">Patrimônio Total</p>
+          <p className="text-3xl font-bold text-foreground">
+            R$ {Number(summary.totalValue).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </p>
+        </Card>
+
+        <Card className="p-6">
+          <p className="text-sm text-muted-foreground font-medium mb-2">Total Investido</p>
+          <p className="text-3xl font-bold text-foreground">
+            R$ {Number(summary.totalInvested).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </p>
+        </Card>
+
+        <Card className="p-6">
+          <p className="text-sm text-muted-foreground font-medium mb-2">Ganho/Perda</p>
+          <div className="flex items-baseline gap-2">
+            <p className={`text-3xl font-bold ${isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+              R$ {Number(summary.totalGain).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </p>
+            <div className={`flex items-center gap-1 ${isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+              {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+              <span className="text-sm font-medium">{gainPercentage.toFixed(2)}%</span>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <p className="text-sm text-muted-foreground font-medium mb-2">Ativos</p>
+          <p className="text-3xl font-bold text-foreground">{summary.holdingCount}</p>
+        </Card>
+      </div>
+
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <PortfolioEvolution data={evolutionData} />
+        <AssetDistribution data={distributionData} />
+      </div>
+
+      {/* Dividends and Holdings Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <UpcomingDividends data={upcomingDividends} />
+
+        {/* Quick Holdings Summary */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-foreground">Principais Ativos</h2>
+            <Button variant="outline" size="sm">
+              Ver Todos
+            </Button>
+          </div>
+
+          <div className="space-y-3">
+            {holdings?.slice(0, 5).map((holding) => {
+              const holdingGainPercentage = Number(holding.gainPercentage);
+              const isHoldingPositive = holdingGainPercentage >= 0;
+
+              return (
+                <div 
+                  key={holding.id} 
+                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/30 transition-colors"
+                >
+                  <div>
+                    <p className="font-bold text-foreground">{holding.ticker}</p>
+                    <p className="text-sm text-muted-foreground">{holding.assetName}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-foreground">
+                      R$ {Number(holding.currentValue).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </p>
+                    <p className={`text-sm font-medium ${isHoldingPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                      {isHoldingPositive ? '+' : ''}{holdingGainPercentage.toFixed(2)}%
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      </div>
+
+      {/* Full Holdings Table */}
+      <Card className="overflow-hidden">
+        <div className="p-6 border-b border-border">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-foreground">Minha Carteira Completa</h2>
+            <Button className="bg-primary text-primary-foreground hover:bg-accent">
+              <PlusCircle className="w-4 h-4 mr-2" />
+              Novo Ativo
+            </Button>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Ativo</th>
+                <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Quantidade</th>
+                <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Preço Médio</th>
+                <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Preço Atual</th>
+                <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Total Investido</th>
+                <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Valor Atual</th>
+                <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Ganho/Perda</th>
+              </tr>
+            </thead>
+            <tbody>
+              {holdings?.map((holding) => {
+                const holdingGainPercentage = Number(holding.gainPercentage);
+                const isHoldingPositive = holdingGainPercentage >= 0;
+
+                return (
+                  <tr key={holding.id} className="border-b border-border hover:bg-muted/20 transition-colors">
+                    <td className="px-6 py-4">
+                      <div>
+                        <p className="font-semibold text-foreground">{holding.ticker}</p>
+                        <p className="text-sm text-muted-foreground">{holding.assetName}</p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-right text-foreground">
+                      {Number(holding.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </td>
+                    <td className="px-6 py-4 text-right text-foreground">
+                      R$ {Number(holding.averageBuyPrice).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </td>
+                    <td className="px-6 py-4 text-right text-foreground">
+                      R$ {Number(holding.currentPrice).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </td>
+                    <td className="px-6 py-4 text-right text-foreground">
+                      R$ {Number(holding.totalInvested).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </td>
+                    <td className="px-6 py-4 text-right text-foreground">
+                      R$ {Number(holding.currentValue).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </td>
+                    <td className={`px-6 py-4 text-right font-medium ${isHoldingPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                      <div className="flex items-center justify-end gap-1">
+                        {isHoldingPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+                        <span>
+                          R$ {Number(holding.gain).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                      <p className="text-xs">({holdingGainPercentage.toFixed(2)}%)</p>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+export default function Home() {
+  const { user, loading, isAuthenticated, refresh } = useAuth();
+  const [location] = useLocation();
+
+  useEffect(() => {
+    console.log("[HomeEnhanced] Current state:", {
+      isAuthenticated,
+      user: user?.email,
+      loading,
+      location,
+    });
+  }, [isAuthenticated, user, loading, location]);
+
+  // Refetch auth status quando a página monta
+  useEffect(() => {
+    const handleFocus = () => {
+      console.log("[HomeEnhanced] Window focused, refreshing auth");
+      refresh();
+    };
+
+    window.addEventListener("focus", handleFocus);
+
+    // Se voltou do OAuth (URL tem query params)
+    if (location.includes("?loggedin=")) {
+      console.log("[HomeEnhanced] OAuth callback detected!");
+      
+      // Força refetch IMEDIATO e múltiplas vezes
+      const refetchAttempts = [
+        { delay: 0, label: "immediate" },
+        { delay: 25, label: "25ms" },
+        { delay: 75, label: "75ms" },
+        { delay: 150, label: "150ms" },
+        { delay: 300, label: "300ms" },
+        { delay: 500, label: "500ms" },
+        { delay: 800, label: "800ms" },
+        { delay: 1200, label: "1200ms" },
+      ];
+
+      const timers = refetchAttempts.map((attempt) =>
+        setTimeout(() => {
+          console.log(`[HomeEnhanced] Refetch attempt (${attempt.label})`);
+          refresh();
+        }, attempt.delay)
+      );
+
+      // Remove query params
+      setTimeout(() => {
+        window.history.replaceState({}, "", "/dashboard");
+      }, 100);
+
+      return () => {
+        window.removeEventListener("focus", handleFocus);
+        timers.forEach((timer) => clearTimeout(timer));
+      };
+    } else {
+      // Normal mount - refetch anyway
+      console.log("[HomeEnhanced] Normal mount, refreshing auth");
+      refresh();
+    }
+
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [refresh, location]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="animate-spin w-8 h-8 text-primary" />
+      </div>
+    );
+  }
+
+  // Versão Pública - Permite exploração sem login obrigatório
+  if (!isAuthenticated) {
+    return (
+      <ModernDashboardLayout isPublic={true}>
+        <div className="space-y-8">
+          {/* Seção de Boas-vindas */}
+          <div className="text-center py-12">
+            <h1 className="text-4xl font-bold text-foreground mb-3">InvestDash</h1>
+            <p className="text-xl text-muted-foreground mb-8">Plataforma de Análise de Investimentos Profissional</p>
+            <Button
+              onClick={() => {
+                window.location.href = `http://localhost:3000/api/google/login`;
+              }}
+              size="lg"
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              Entrar / Criar Conta
+            </Button>
+          </div>
+
+          {/* Funcionalidades Principais */}
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-6 text-center">Funcionalidades Principais</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="p-8 hover:shadow-lg transition-shadow border-0 bg-muted/30">
+                <TrendingUp className="w-10 h-10 text-primary mb-4" />
+                <h3 className="text-lg font-bold text-foreground mb-2">Análise Fundamentalista</h3>
+                <p className="text-sm text-muted-foreground">20+ indicadores técnicos com histórico completo para análise profissional</p>
+              </Card>
+              <Card className="p-8 hover:shadow-lg transition-shadow border-0 bg-muted/30">
+                <BarChart3 className="w-10 h-10 text-primary mb-4" />
+                <h3 className="text-lg font-bold text-foreground mb-2">Fórmulas de Valuation</h3>
+                <p className="text-sm text-muted-foreground">Benjamin Graham, Bazin e mais. Descubra se o ativo está barato</p>
+              </Card>
+              <Card className="p-8 hover:shadow-lg transition-shadow border-0 bg-muted/30">
+                <Shield className="w-10 h-10 text-primary mb-4" />
+                <h3 className="text-lg font-bold text-foreground mb-2">100% Gratuito</h3>
+                <p className="text-sm text-muted-foreground">Sem limitações, sem cobranças futuras. Análise profissional para todos</p>
+              </Card>
+            </div>
+          </div>
+
+          {/* Mostrar componentes públicos */}
+          <MarketIndices />
+
+          {/* CTA Final */}
+          <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-12 text-center border border-primary/20">
+            <h2 className="text-3xl font-bold text-foreground mb-4">Comece a Investir com Inteligência</h2>
+            <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
+              Acesse ferramentas profissionais de análise, acompanhe sua carteira e receba insights sobre seus investimentos
+            </p>
+            <Button
+              onClick={() => {
+                window.location.href = `http://localhost:3000/api/google/login`;
+              }}
+              size="lg"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
+            >
+              Começar Grátis
+            </Button>
+          </div>
+        </div>
+      </ModernDashboardLayout>
+    );
+  }
+
+  // Versão Autenticada - Modo Dashboard Completo
+  return (
+    <ModernDashboardLayout>
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Bem-vindo, {user?.name}!</h1>
+          <p className="text-muted-foreground mt-2">Acompanhe sua carteira de investimentos em tempo real</p>
+        </div>
+
+        {/* Market Indices */}
+        <MarketIndices />
+
+        {/* Portfolio Summary and Charts */}
+        <PortfolioSummary />
+      </div>
+    </ModernDashboardLayout>
+  );
+}

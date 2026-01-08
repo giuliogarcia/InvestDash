@@ -1,0 +1,53 @@
+================================================================================
+                    SOLUÇÃO COMPLETA - InvestDash
+================================================================================
+
+PROBLEMA IDENTIFICADO:
+- O site estava mostrando página padrão do Manus em vez do InvestDash
+- Causa: Servidor Express não estava servindo arquivos estáticos corretamente
+
+SOLUÇÃO APLICADA:
+1. Corrigido arquivo server/_core/vite.ts
+   - Melhorado tratamento de rotas estáticas
+   - Adicionado logging detalhado
+   - Configurado cache correto
+   - Implementado fallback para SPA
+
+2. Adicionados arquivos de configuração:
+   - manus.json - Configuração do Manus
+   - .manusrc - Configuração alternativa
+
+3. Melhorado build:
+   - Verificação de diretórios
+   - Tratamento de erros
+   - Cache-Control headers
+
+ARQUIVOS MODIFICADOS:
+- server/_core/vite.ts (PRINCIPAL)
+- manus.json (NOVO)
+- .manusrc (NOVO)
+
+PRÓXIMOS PASSOS:
+1. Clique em "Publish" no painel do Manus
+2. Aguarde o build completar (2-5 minutos)
+3. Acesse https://seu-dominio.manus.space
+4. Teste as funcionalidades
+
+TESTES RECOMENDADOS:
+✓ Login com Google
+✓ Página de detalhes (/ativo/PETR4)
+✓ Gráficos
+✓ Comparador
+✓ Rankings
+
+VARIÁVEIS DE AMBIENTE (já configuradas):
+✓ GOOGLE_CLIENT_ID
+✓ GOOGLE_CLIENT_SECRET
+✓ BRAPI_API_KEY
+✓ GOOGLE_REDIRECT_URI
+
+STATUS: ✅ PRONTO PARA PUBLICAÇÃO
+
+Tempo estimado: 5-10 minutos
+
+================================================================================
