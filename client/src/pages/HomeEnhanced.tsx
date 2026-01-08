@@ -452,6 +452,158 @@ export default function Home() {
             </Card>
           </div>
 
+          {/* Rankings Section */}
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-6">Rankings de Ativos</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Maiores Dividend Yield */}
+              <Card className="p-6 border-0 bg-muted/30">
+                <h3 className="text-lg font-bold text-foreground mb-4">Maiores Dividend Yield</h3>
+                <div className="space-y-3">
+                  {[
+                    { position: "#1", ticker: "MOAR3", name: "Monteiro Aranha", dy: "80,07%" },
+                    { position: "#2", ticker: "SCAR3", name: "São Carlos", dy: "51,64%" },
+                    { position: "#3", ticker: "GRND3", name: "Grendene", dy: "36,47%" },
+                    { position: "#4", ticker: "GUAR3", name: "Guararapes", dy: "35,60%" },
+                    { position: "#5", ticker: "MELK3", name: "Melnick", dy: "34,80%" },
+                  ].map((item) => (
+                    <div key={item.ticker} className="flex justify-between items-start pb-3 border-b border-border/20 last:border-0">
+                      <div>
+                        <p className="text-xs text-muted-foreground font-medium">{item.position}</p>
+                        <p className="font-semibold text-foreground">{item.ticker}</p>
+                        <p className="text-xs text-muted-foreground">{item.name}</p>
+                      </div>
+                      <span className="text-green-600 font-bold text-sm">{item.dy}</span>
+                    </div>
+                  ))}
+                </div>
+                <Button variant="outline" className="w-full mt-4" size="sm">
+                  Ver Ranking Completo →
+                </Button>
+              </Card>
+
+              {/* Maiores Valor de Mercado */}
+              <Card className="p-6 border-0 bg-muted/30">
+                <h3 className="text-lg font-bold text-foreground mb-4">Maiores Valor de Mercado</h3>
+                <div className="space-y-3">
+                  {[
+                    { position: "#1", ticker: "ITUB4", name: "Banco Itaú", market: "R$ 418,32 B" },
+                    { position: "#2", ticker: "PETR4", name: "Petrobrás", market: "R$ 392,87 B" },
+                    { position: "#3", ticker: "VALE3", name: "Vale", market: "R$ 346,05 B" },
+                    { position: "#4", ticker: "BPAC11", name: "BTG Pactual", market: "R$ 331,39 B" },
+                    { position: "#5", ticker: "ABEV3", name: "Ambev", market: "R$ 215,15 B" },
+                  ].map((item) => (
+                    <div key={item.ticker} className="flex justify-between items-start pb-3 border-b border-border/20 last:border-0">
+                      <div>
+                        <p className="text-xs text-muted-foreground font-medium">{item.position}</p>
+                        <p className="font-semibold text-foreground">{item.ticker}</p>
+                        <p className="text-xs text-muted-foreground">{item.name}</p>
+                      </div>
+                      <span className="text-primary font-bold text-sm">{item.market}</span>
+                    </div>
+                  ))}
+                </div>
+                <Button variant="outline" className="w-full mt-4" size="sm">
+                  Ver Ranking Completo →
+                </Button>
+              </Card>
+
+              {/* Maiores Receitas */}
+              <Card className="p-6 border-0 bg-muted/30">
+                <h3 className="text-lg font-bold text-foreground mb-4">Maiores Receitas</h3>
+                <div className="space-y-3">
+                  {[
+                    { position: "#1", ticker: "PETR4", name: "Petrobrás", revenue: "R$ 491,45 B" },
+                    { position: "#2", ticker: "ITUB4", name: "Banco Itaú", revenue: "R$ 388,88 B" },
+                    { position: "#3", ticker: "BBAS3", name: "Banco do Brasil", revenue: "R$ 305,72 B" },
+                    { position: "#4", ticker: "BBDC3", name: "Banco Bradesco", revenue: "R$ 252,28 B" },
+                    { position: "#5", ticker: "RAIZ4", name: "Raízen", revenue: "R$ 238,73 B" },
+                  ].map((item) => (
+                    <div key={item.ticker} className="flex justify-between items-start pb-3 border-b border-border/20 last:border-0">
+                      <div>
+                        <p className="text-xs text-muted-foreground font-medium">{item.position}</p>
+                        <p className="font-semibold text-foreground">{item.ticker}</p>
+                        <p className="text-xs text-muted-foreground">{item.name}</p>
+                      </div>
+                      <span className="text-blue-600 font-bold text-sm">{item.revenue}</span>
+                    </div>
+                  ))}
+                </div>
+                <Button variant="outline" className="w-full mt-4" size="sm">
+                  Ver Ranking Completo →
+                </Button>
+              </Card>
+            </div>
+          </div>
+
+          {/* Índices e Moedas Section */}
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-6">Mercado em Tempo Real</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Índices */}
+              <Card className="p-6 border-0 bg-muted/30">
+                <h3 className="text-lg font-bold text-foreground mb-4">Índices Principais</h3>
+                <div className="space-y-3">
+                  {[
+                    { name: "Ibovespa", value: "161.975,23", change: "-1,03%", isPositive: false },
+                    { name: "IFIX", value: "3.781,07", change: "-0,19%", isPositive: false },
+                    { name: "Small Cap", value: "56.123,45", change: "+2,15%", isPositive: true },
+                  ].map((idx) => (
+                    <div key={idx.name} className="flex justify-between items-center pb-3 border-b border-border/20 last:border-0">
+                      <div>
+                        <p className="font-semibold text-foreground">{idx.name}</p>
+                        <p className="text-sm text-foreground">{idx.value}</p>
+                      </div>
+                      <span className={`font-bold ${idx.isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                        {idx.change}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+
+              {/* Moedas */}
+              <Card className="p-6 border-0 bg-muted/30">
+                <h3 className="text-lg font-bold text-foreground mb-4">Moedas</h3>
+                <div className="space-y-3">
+                  {[
+                    { name: "Dólar Comercial", value: "R$ 5,39", change: "+0,15%" },
+                    { name: "Euro", value: "R$ 6,30", change: "+0,11%" },
+                    { name: "Yuan Chinês", value: "R$ 0,77", change: "-0,22%" },
+                  ].map((moeda) => (
+                    <div key={moeda.name} className="flex justify-between items-center pb-3 border-b border-border/20 last:border-0">
+                      <div>
+                        <p className="font-semibold text-foreground">{moeda.name}</p>
+                        <p className="text-sm text-foreground">{moeda.value}</p>
+                      </div>
+                      <span className="font-semibold text-muted-foreground">{moeda.change}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+
+              {/* Criptomoedas */}
+              <Card className="p-6 border-0 bg-muted/30">
+                <h3 className="text-lg font-bold text-foreground mb-4">Criptomoedas</h3>
+                <div className="space-y-3">
+                  {[
+                    { name: "Bitcoin", value: "R$ 495,50 K", change: "-1,40%", isPositive: false },
+                    { name: "Ethereum", value: "R$ 17,31 K", change: "-1,96%", isPositive: false },
+                    { name: "Solana", value: "R$ 742,65", change: "-1,59%", isPositive: false },
+                  ].map((cripto) => (
+                    <div key={cripto.name} className="flex justify-between items-center pb-3 border-b border-border/20 last:border-0">
+                      <div>
+                        <p className="font-semibold text-foreground">{cripto.name}</p>
+                        <p className="text-sm text-foreground">{cripto.value}</p>
+                      </div>
+                      <span className="font-semibold text-red-600">{cripto.change}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </div>
+          </div>
+
           {/* CTA Final */}
           <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-12 text-center border border-primary/20">
             <h2 className="text-3xl font-bold text-foreground mb-4">Comece a Investir com Inteligência</h2>
