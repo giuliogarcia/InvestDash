@@ -84,10 +84,10 @@ export default function Carteira() {
                   <Input
                     placeholder="Pesquise o ativo (ex: PETR4, ITUB4)"
                     value={formData.ticker}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onChangeCapture={(e) =>
-                      setFormData({ ...formData, ticker: (e.target as HTMLInputElement).value })
-                    }
+                    onChange={(e) => {
+                      setFormData({ ...formData, ticker: e.target.value });
+                      setSearchQuery(e.target.value);
+                    }}
                     className="pl-10"
                   />
                   <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
