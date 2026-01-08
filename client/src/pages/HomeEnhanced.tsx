@@ -24,39 +24,60 @@ function PortfolioSummary() {
     );
   }
 
-  if (!summary) {
+  // Show empty state if no holdings
+  if (!holdings || holdings.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground mb-4">Nenhum ativo na carteira</p>
+      <div className="text-center py-16 bg-muted/30 rounded-lg border border-dashed">
+        <PlusCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+        <p className="text-muted-foreground mb-4 text-lg">Nenhum ativo cadastrado na sua carteira</p>
         <Button className="bg-primary text-primary-foreground hover:bg-accent">
           <PlusCircle className="w-4 h-4 mr-2" />
-          Adicionar Ativo
+          Adicionar Primeiro Ativo
         </Button>
       </div>
     );
   }
 
+  if (!summary) {
+    return null;
+  }
+
   const gainPercentage = Number(summary.gainPercentage);
   const isPositive = gainPercentage >= 0;
 
-  // Mock data for new components
-  const distributionData = [
-    { name: 'Ações', value: 45000, percentage: 45 },
-    { name: 'FIIs', value: 30000, percentage: 30 },
-    { name: 'Renda Fixa', value: 15000, percentage: 15 },
-    { name: 'ETFs', value: 10000, percentage: 10 },
-  ];
+  // Distribution data from actual holdings
+  const distributionData = holdings.reduce((acc, holding) => {
+    const type = holding.ticker.endsWith('11') ? 'FIIs' : 'Ações';
+    const existing = acc.find(d => d.name === type);
+    const value = Number(holding.currentValue) || 0;
+    
+    if (existing) {
+      existing.value += value;
+    } else {
+      acc.push({ name: type, value, percentage: 0 });
+    }
+    return acc;
+  }, [] as any[]);
 
+  // Calculate percentages
+  const totalValue = distributionData.reduce((sum, d) => sum + d.value, 0);
+  distributionData.forEach(d => {
+    d.percentage = totalValue > 0 ? Math.round((d.value / totalValue) * 100) : 0;
+  });
+
+  // Evolution data (simplified - would come from real data in production)
   const evolutionData = Array.from({ length: 30 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() - (29 - i));
+    const baseValue = Number(summary.totalValue);
     return {
       date: date.toISOString(),
-      value: 95000 + Math.random() * 10000,
-      invested: 90000 + (i * 200),
+      value: baseValue + (Math.random() * 5000 - 2500),
+      invested: Number(summary.totalInvested),
     };
   });
 
+  // Upcoming dividends from mock data (in production, would be real)
   const upcomingDividends = [
     {
       id: 1,
@@ -637,7 +658,7 @@ export default function Home() {
         {/* Market Indices */}
         <MarketIndices />
 
-        {/* Portfolio Summary and Charts */}
+        {/* Portfolio Summary and Charts - Only show if user has holdings */}
         <PortfolioSummary />
       </div>
     </ModernDashboardLayout>

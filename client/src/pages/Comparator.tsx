@@ -1,5 +1,5 @@
 import { useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
+import ModernDashboardLayout from "@/components/ModernDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -151,7 +151,7 @@ export default function Comparator() {
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
   return (
-    <DashboardLayout>
+    <ModernDashboardLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Comparador de Ativos</h1>
@@ -472,6 +472,6 @@ export default function Comparator() {
           </Card>
         )}
       </div>
-    </DashboardLayout>
+    </ModernDashboardLayout>
   );
 }

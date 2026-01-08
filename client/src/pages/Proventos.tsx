@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import DashboardLayout from "@/components/DashboardLayout";
+import ModernDashboardLayout from "@/components/ModernDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,16 +50,16 @@ export default function Proventos() {
 
   if (isLoading) {
     return (
-      <DashboardLayout>
+      <ModernDashboardLayout>
         <div className="flex items-center justify-center h-64">
           <Loader2 className="animate-spin w-8 h-8 text-primary" />
         </div>
-      </DashboardLayout>
+      </ModernDashboardLayout>
     );
   }
 
   return (
-    <DashboardLayout>
+    <ModernDashboardLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -301,6 +301,6 @@ export default function Proventos() {
           </Card>
         )}
       </div>
-    </DashboardLayout>
+    </ModernDashboardLayout>
   );
 }

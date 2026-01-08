@@ -1,5 +1,5 @@
 import { useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
+import ModernDashboardLayout from "@/components/ModernDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -136,7 +136,7 @@ export default function Rankings() {
   const [selectedCategory, setSelectedCategory] = useState<'acoes' | 'fiis'>('acoes');
 
   return (
-    <DashboardLayout>
+    <ModernDashboardLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Rankings de Ativos</h1>
@@ -268,6 +268,6 @@ export default function Rankings() {
           </Card>
         </div>
       </div>
-    </DashboardLayout>
+    </ModernDashboardLayout>
   );
 }

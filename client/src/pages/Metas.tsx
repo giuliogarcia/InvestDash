@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import DashboardLayout from "@/components/DashboardLayout";
+import ModernDashboardLayout from "@/components/ModernDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -78,7 +78,7 @@ export default function Metas() {
   const completedGoals = goals?.filter(g => g.status === "concluido") || [];
 
   return (
-    <DashboardLayout>
+    <ModernDashboardLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -341,6 +341,6 @@ export default function Metas() {
           </Card>
         )}
       </div>
-    </DashboardLayout>
+    </ModernDashboardLayout>
   );
 }

@@ -1,5 +1,5 @@
 import { trpc } from "@/lib/trpc";
-import DashboardLayout from "@/components/DashboardLayout";
+import ModernDashboardLayout from "@/components/ModernDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Loader2, TrendingUp, TrendingDown } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
@@ -11,11 +11,11 @@ export default function Analise() {
 
   if (summaryLoading) {
     return (
-      <DashboardLayout>
+      <ModernDashboardLayout>
         <div className="flex items-center justify-center h-64">
           <Loader2 className="animate-spin w-8 h-8 text-primary" />
         </div>
-      </DashboardLayout>
+      </ModernDashboardLayout>
     );
   }
 
@@ -55,7 +55,7 @@ export default function Analise() {
   ];
 
   return (
-    <DashboardLayout>
+    <ModernDashboardLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Análise da Carteira</h1>
@@ -274,6 +274,6 @@ export default function Analise() {
           </Card>
         )}
       </div>
-    </DashboardLayout>
+    </ModernDashboardLayout>
   );
 }

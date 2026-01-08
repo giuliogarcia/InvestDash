@@ -5,7 +5,7 @@ import { Loader2, TrendingUp, TrendingDown, PlusCircle } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
+import ModernDashboardLayout from "@/components/ModernDashboardLayout";
 
 function PortfolioSummary() {
   const { data: summary, isLoading } = trpc.portfolio.getSummary.useQuery();
@@ -184,7 +184,7 @@ export default function Home() {
   }
 
   return (
-    <DashboardLayout>
+    <ModernDashboardLayout>
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Bem-vindo, {user?.name}!</h1>
@@ -193,6 +193,6 @@ export default function Home() {
 
         <PortfolioSummary />
       </div>
-    </DashboardLayout>
+    </ModernDashboardLayout>
   );
 }
